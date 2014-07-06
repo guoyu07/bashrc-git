@@ -12,13 +12,12 @@ export HISTFILESIZE=1000
 export PROMPT_COMMAND='echo -ne "\033]0;$PWD\007"'
 
 # PATH variable, configurated to work with npm and homebrew
-export PATH=/usr/local/bin:/usr/local/sbin:/usr/local/share/npm/bin:~/bin:$PATH
-# for svn 1.7.6, add /opt/subversion/bin to path
-#export PATH=/opt/subversion/bin:$PATH
-export NODE_PATH="/usr/local/lib/node_modules:${NODE_PATH}"
+# export PATH=/usr/local/bin:/usr/local/sbin:/usr/local/share/npm/bin:~/bin:$PATH
+export PATH=~/bin:$PATH
 
 # sets your computer to sleep immediatly
 alias dodo="pmset sleepnow"
+alias lsusb="system_profiler SPUSBDataType"
 
 # retrieves the http status code for any URL
 alias httpstatuscode="curl -w %{http_code} -s --output /dev/null $1"
@@ -43,9 +42,6 @@ alias weather="curl -s 'http://rss.accuweather.com/rss/liveweather_rss.asp?metri
 alias tolowercase="pbpaste | tr "[:upper:]" "[:lower:]" | pbcopy"
 alias touppercase="pbpaste | tr "[:lower:]" "[:upper:]" | pbcopy"
 
-#alias phplog="tail -f /var/log/apache2/error_log"
-
-#alias rm="rm -i"
 # only show dot files
 alias lsh="ls -ld .??*"
 
@@ -68,13 +64,12 @@ function gitexport(){
 	git archive master | tar -x -C "$1"
 }
 
+alias Gcd='cd $(git rev-parse --show-toplevel)'
+
 # tab completion for ssh hosts
 if [ -f ~/.ssh/known_hosts ]; then
     complete -W "$(echo `cat ~/.ssh/known_hosts | cut -f 1 -d ' ' | sed -e s/,.*//g | uniq | grep -v "\["`;)" ssh
 fi
-
-# Tab complete for sudo
-complete -cf sudo
 
 #S
 PS1="[\[\033[36m\]\u\[\033[37m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]]$ "
@@ -87,13 +82,6 @@ export LESS_TERMCAP_se=$'\E[0m'
 export LESS_TERMCAP_so=$'\E[01;44;33m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
-
-# Generates a tree view from the current directory
-function tree(){
-	pwd
-	ls -R | grep ":$" |   \
-	sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
-}
 
 # cd into the last focused finder window
 function cdfinder(){
@@ -109,20 +97,20 @@ function randpassw() {
 	else
 		MAXSIZE=$1
 	fi
-	array1=( 
-	q w e r t y u i o p a s d f g h j k l z x c v b n m Q W E R T Y U I O P A S D 
-	F G H J K L Z X C V B N M 1 2 3 4 5 6 7 8 9 0 
-	\! \@ \$ \% \^ \& \* \! \@ \$ \% \^ \& \* \@ \$ \% \^ \& \* 
-	) 
-	MODNUM=${#array1[*]} 
-	pwd_len=0 
-	while [ $pwd_len -lt $MAXSIZE ] 
-	do 
-	    index=$(($RANDOM%$MODNUM)) 
-	    echo -n "${array1[$index]}" 
-	    ((pwd_len++)) 
-	done 
-	echo 
+	array1=(
+	q w e r t y u i o p a s d f g h j k l z x c v b n m Q W E R T Y U I O P A S D
+	F G H J K L Z X C V B N M 1 2 3 4 5 6 7 8 9 0
+	\! \@ \$ \% \^ \& \* \! \@ \$ \% \^ \& \* \@ \$ \% \^ \& \*
+	)
+	MODNUM=${#array1[*]}
+	pwd_len=0
+	while [ $pwd_len -lt $MAXSIZE ]
+	do
+	    index=$(($RANDOM%$MODNUM))
+	    echo -n "${array1[$index]}"
+	    ((pwd_len++))
+	done
+	echo
 }
 
 #   ---------------------------
@@ -159,16 +147,19 @@ alias showBlocked='sudo ipfw list'                  # showBlocked:  All ipfw rul
 #   -------------------------------------------------------------------
 alias finderShowHidden='defaults write com.apple.finder ShowAllFiles TRUE'
 alias finderHideHidden='defaults write com.apple.finder ShowAllFiles FALSE'
+# /Applications 777 will cause VirtualBox startup failed
+alias fixpermission='sudo chmod 755 /Applications'
 
 # Macvim alias
 # put to /usr/local/bin , such as gvim, vimdiff...
-#alias gvim='/Applications/MacVim.app/Contents/MacOS/Vim -g'
+# alias gvim='/Applications/MacVim.app/Contents/MacOS/Vim -g'
 
 # some more ls aliases
 alias ls='ls -GFh'
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
+alias e="vim"
 
 #   Set default blocksize for ls, df, du
 #   from this: http://hints.macworld.com/comment.php?mode=view&cid=24491
@@ -182,10 +173,14 @@ alias l='ls -CF'
 export CLICOLOR=1
 export LSCOLORS=ExFxBxDxCxegedabagacad
 
-# brew install bash-completion
-if [ -f `brew --prefix`/etc/bash_completion ]; then
-  . `brew --prefix`/etc/bash_completion
+. ~/.rc/bashrc.common
+
+# Macport install bash-completion
+if [ -f /opt/local/etc/profile.d/bash_completion.sh ]; then
+	. /opt/local/etc/profile.d/bash_completion.sh
 fi
 
-# add git evn support
-. ~/.rc/bashrc.common
+# add git support
+if [ -f $HOME/.bashrc.local ]; then
+	. $HOME/.bashrc.local
+fi

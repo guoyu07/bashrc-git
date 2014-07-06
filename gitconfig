@@ -2,8 +2,8 @@
 	autocrlf = false
 	excludesfile=~/.gitignore
 [user]
-	name = "cooksofts"
-	email = cooksofts@gmail.com
+	name = "ZendCodex"
+	email = zendcodex@foxmail.com
 [merge]
 	summary = true
 	tool = vimdiff
@@ -40,3 +40,12 @@
 	sed = !git ls-files --stage | grep ^100 | awk '{print $4}' | xargs sed -s
 	slg = shortlog --pretty='format:%h %s'
 	locate = !sh -c 'git ls-files | grep --color=auto "$1"' -
+
+[http]
+	postBuffer = 524288000
+	sslVerify = false
+	; proxy = http://pagent:8087
+; [https]
+	;     proxy = http://pagent:8087
+; [git]
+	;     proxy = http://pagent:8087

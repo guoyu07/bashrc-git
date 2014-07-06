@@ -1,0 +1,32 @@
+#  ---------------------------------------------------------------------------
+#  Your Self Custom Setting
+#  link this file to $HOME/.bashrc.local
+#  ---------------------------------------------------------------------------
+
+#alias phplog="tail -f /var/log/apache2/error_log"
+
+# for svn 1.7.6, add /opt/subversion/bin to path
+# export PATH=/opt/subversion/bin:$PATH
+# export NODE_PATH="/usr/local/lib/node_modules:${NODE_PATH}"
+
+# Tab complete for sudo, remove this, it will conflict with bash-completion
+# complete -cf sudo
+
+#alias rm="rm -i"
+# # brew install bash-completion
+# if [ -f `brew --prefix`/etc/bash_completion ]; then
+#   . `brew --prefix`/etc/bash_completion
+# fi
+
+alias alv='adb logcat -v time'
+alias alc='adb logcat -c'
+alias alg='adb logcat |grep $1'
+alias als='adb logcat -s $1'
+alias adb-reboot-recovery='adb reboot recovery'
+alias adb-restart-asroot='sudo `which adb` kill-server && sudo `which adb` start-server'
+alias runproxy="python ~/bin/goagent/local/proxy.py"
+
+export PATH=$PATH:/home/android/sdk/build-tools/android-4.3
+
+# custom for myself, maybe not suitable for you
+function mountsshfs() { sshfs -o uid=501,gid=20 build@192.9.144.79:$@ /mnt/sshfs/ ; }
