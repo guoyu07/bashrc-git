@@ -4,16 +4,21 @@
 #
 #  ---------------------------------------------------------------------------
 
+# fix issue when upgrade grep to v2.21
+# grep: warning: GREP_OPTIONS is deprecated; please use an alias or script
+alias grep="/usr/bin/grep --color=auto --binary-files=without-match"
+
 export HISTCONTROL=ignoredups
 export HISTSIZE=1000
 export HISTFILESIZE=1000
 
 # iTerm2 custom title on each tab
-export PROMPT_COMMAND='echo -ne "\033]0;$PWD\007"'
+export PROMPT_COMMAND='echo -ne "\033]0;$PWD\007"; history -a; history -r'
 
 # PATH variable, configurated to work with npm and homebrew
 # export PATH=/usr/local/bin:/usr/local/sbin:/usr/local/share/npm/bin:~/bin:$PATH
 export PATH=~/bin:$PATH
+export GOPATH=~/Projects/gowork
 
 # sets your computer to sleep immediatly
 alias dodo="pmset sleepnow"
@@ -100,8 +105,12 @@ function randpassw() {
 	array1=(
 	q w e r t y u i o p a s d f g h j k l z x c v b n m Q W E R T Y U I O P A S D
 	F G H J K L Z X C V B N M 1 2 3 4 5 6 7 8 9 0
-	\! \@ \$ \% \^ \& \* \! \@ \$ \% \^ \& \* \@ \$ \% \^ \& \*
 	)
+	# array1=(
+	# q w e r t y u i o p a s d f g h j k l z x c v b n m Q W E R T Y U I O P A S D
+	# F G H J K L Z X C V B N M 1 2 3 4 5 6 7 8 9 0
+	# \! \@ \$ \% \^ \& \* \! \@ \$ \% \^ \& \* \@ \$ \% \^ \& \*
+	# )
 	MODNUM=${#array1[*]}
 	pwd_len=0
 	while [ $pwd_len -lt $MAXSIZE ]
@@ -117,7 +126,7 @@ function randpassw() {
 #   6.  NETWORKING
 #   ---------------------------
 
-alias myip='curl ip.appspot.com'                    # myip:         Public facing IP Address
+alias myip='curl ipv4.icanhazip.com'
 alias netCons='lsof -i'                             # netCons:      Show all open TCP/IP sockets
 alias flushDNS='dscacheutil -flushcache'            # flushDNS:     Flush out the DNS Cache
 alias lsock='sudo /usr/sbin/lsof -i -P'             # lsock:        Display open sockets
@@ -155,11 +164,12 @@ alias fixpermission='sudo chmod 755 /Applications'
 # alias gvim='/Applications/MacVim.app/Contents/MacOS/Vim -g'
 
 # some more ls aliases
-alias ls='ls -GFh'
+# alias ls='ls -GFh'
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 alias e="vim"
+alias hexeditor='open -a ~/Applications/Hex\ Fiend.app/'
 
 #   Set default blocksize for ls, df, du
 #   from this: http://hints.macworld.com/comment.php?mode=view&cid=24491
@@ -176,11 +186,17 @@ export LSCOLORS=ExFxBxDxCxegedabagacad
 . ~/.rc/bashrc.common
 
 # Macport install bash-completion
-if [ -f /opt/local/etc/profile.d/bash_completion.sh ]; then
-	. /opt/local/etc/profile.d/bash_completion.sh
+# if [ -f /opt/local/etc/profile.d/bash_completion.sh ]; then
+#     . /opt/local/etc/profile.d/bash_completion.sh
+# fi
+
+if [ -f /opt/local/etc/bash_completion ]; then
+	. /opt/local/etc/bash_completion
 fi
 
 # add git support
 if [ -f $HOME/.bashrc.local ]; then
 	. $HOME/.bashrc.local
 fi
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting

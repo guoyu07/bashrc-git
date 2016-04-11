@@ -1,15 +1,30 @@
 [core]
-	autocrlf = false
 	excludesfile=~/.gitignore
+	filemode = false
+
 [user]
-	name = "ZendCodex"
-	email = zendcodex@foxmail.com
+	name = "Yin Qisen"
+	email = v@yinqisen.cn
 [merge]
 	summary = true
 	tool = vimdiff
+
 [diff]
+	tool = bcomp
 	renames = copy
 	wordregex = "[[:alnum:]_]+|[^[:space:]]"
+[difftool]
+	promp = false
+[difftool "bcomp"]
+	trustExitCode = true
+	cmd = "/opt/local/bin/bcomp" \"$LOCAL\" \"$REMOTE\"
+
+[mergtool]
+	promp = false
+[mergetool "bcomp"]
+	trustExitCode = true
+	cmd = "/opt/local/bin/bcomp" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"MERGED\"
+
 [i18n]
 	logoutputencoding = UTF-8
 [color]
@@ -30,22 +45,26 @@
 [mailmap]
 	file = ~/.mailmap
 
-[sendemail]
-	smtpencryption = tls
-	smtpserver = smtp.gmail.com
-	smtpuser = pkufranky@gmail.com
-	smtpserverport = 587
+#[sendemail]
+#	smtpencryption = tls
+#	smtpserver = smtp.gmail.com
+#	smtpuser = pkufranky@gmail.com
+#	smtpserverport = 587
 
 [alias]
 	sed = !git ls-files --stage | grep ^100 | awk '{print $4}' | xargs sed -s
 	slg = shortlog --pretty='format:%h %s'
 	locate = !sh -c 'git ls-files | grep --color=auto "$1"' -
+	dt = difftool --dir-diff --no-symlink
 
-[http]
-	postBuffer = 524288000
-	sslVerify = false
-	; proxy = http://pagent:8087
+; [http]
+;     postBuffer = 524288000
+;     proxy = socks5://localhost:7070
+;     sslVerify = false
+
 ; [https]
 	;     proxy = http://pagent:8087
 ; [git]
 	;     proxy = http://pagent:8087
+; [color "diff"]
+;     whitespace = red reverse

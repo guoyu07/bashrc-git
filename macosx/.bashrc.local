@@ -3,6 +3,27 @@
 #  link this file to $HOME/.bashrc.local
 #  ---------------------------------------------------------------------------
 
+#MAVEN_HOME=/usr/local/apache-maven-3.0.5
+# JAVA_HOME=/System/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home
+# JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home
+JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_65.jdk/Contents/Home
+CLASSPATH=$JAVA_HOME/lib
+ANDROID_JAVA_HOME=$JAVA_HOME
+
+GIT_SSH=ssh
+
+export ANDROID_NDK=/Users/qisen/adt-bundle/android-ndk-r9d
+# export ANDROID_NDK=/Users/qisen/android-ndk-r8e
+export ANDROID_HOME=/Users/qisen/adt-bundle/sdk
+
+export GRADLE_HOME=/usr/local/gradle-1.12
+export GROOVY_HOME=/opt/local/share/java/groovy
+export PATH=$GRADLE_HOME/bin:$GROOVY_HOME/bin:$JAVA_HOME/bin:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_NDK:$PATH:.
+
+# export HTTP_PROXY=http://127.0.0.1:8087
+# export HTTPS_PROXY=http://127.0.0.1:8087
+
+# -----------------------------------------------------------------------------
 #alias phplog="tail -f /var/log/apache2/error_log"
 
 # for svn 1.7.6, add /opt/subversion/bin to path
@@ -25,8 +46,37 @@ alias als='adb logcat -s $1'
 alias adb-reboot-recovery='adb reboot recovery'
 alias adb-restart-asroot='sudo `which adb` kill-server && sudo `which adb` start-server'
 alias runproxy="python ~/bin/goagent/local/proxy.py"
+alias psedit="open -a /Applications/Adobe\ Photoshop\ CS6/Adobe\ Photoshop\ CS6.app/ $1"
 
-export PATH=$PATH:/home/android/sdk/build-tools/android-4.3
+export PATH=$PATH:/Users/qisen/adt-bundle/sdk/build-tools/android-4.4W
+export PYTHONPATH=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages
+
+# 作用：能够通过进程名显示log
+# 用法：alogcat com.android.calendar or alogcat calendar
+# 当监控的进程异常退出时，需要重新运行此命令
+function alogcat() {
+	OUT=$(adb shell ps | grep -i $1 | awk '{print $2}')
+	OUT=$(echo $OUT | sed 's/[[:blank:]]\+/\|/g')
+	# 当进程异常退出，log是通过 AndroidRuntime 输出的
+	adb logcat -v time  |grep -E "$OUT|AndroidRuntime"
+}
 
 # custom for myself, maybe not suitable for you
 function mountsshfs() { sshfs -o uid=501,gid=20 build@192.9.144.79:$@ /mnt/sshfs/ ; }
+
+# mount the android file image
+function mountAndroid {
+	hdiutil attach /mnt/DataStore/crackTools.dmg.sparseimage -mountpoint /Volumes/crack;
+	# hdiutil attach /mnt/DataStore/android.dmg.sparseimage -mountpoint /Volumes/android;
+}
+
+# alias gitproxy='export all_proxy=socks5://127.0.0.1:7070'
+
+# export MYSQL_HOME=/opt/local/lib/mysql55
+# alias start_mysql='sudo $MYSQL_HOME/bin/mysqld_safe &'
+# alias stop_mysql='sudo $MYSQL_HOME/bin/mysqladmin shutdown'
+
+# # alias start_mysql='sudo /opt/local/etc/LaunchDaemons/org.macports.mysql5/mysql5.wrapper start'
+# # alias stop_mysql='sudo /opt/local/etc/LaunchDaemons/org.macports.mysql5/mysql5.wrapper stop'
+# alias start_apache2='sudo /opt/local/etc/LaunchDaemons/org.macports.apache2/apache2.wrapper start'
+# alias stop_apache2='sudo /opt/local/etc/LaunchDaemons/org.macports.apache2/apache2.wrapper stop'
